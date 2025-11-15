@@ -1,7 +1,7 @@
 Airport Task Planner – Technical Specification and Project Plan
 Theme
 
-The project consists of a web application (SPA) for planning and monitoring operational tasks in an airport environment (handling, security, cleaning, maintenance, operations). It includes a RESTful Node.js backend, a relational database, and integrations with aviation-related services such as flight status and METAR/TAF. All components are designed to run locally, without using third-party hosting services.
+The project consists of a web application (SPA) for planning and monitoring operational tasks in an airport environment (handling, security, cleaning, maintenance, operations). It includes a RESTful Node.js backend, a relational database, and integrations with aviation-related services such as flight status and METAR/TAF. All components are designed to run locally, without using third-party hosting services
 
 1. Objective and Scope
 
