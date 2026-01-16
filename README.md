@@ -1,227 +1,398 @@
-Airport Task Planner Technical Specification and Project Plan
-1. Introduction
+# Airport Task Planner (MVP)
+
+A minimal **Airport Task Planner** web application (SPA + API) for creating, allocating and monitoring tasks.
+
+## Features (MVP)
+
+- **Roles**: ADMIN, MANAGER, EXECUTOR
+- Admin can create users and assign a manager to each executor
+- Manager can create tasks (OPEN), assign tasks (PENDING), close completed tasks (CLOSED)
+- Executor can view assigned tasks and complete them (COMPLETED)
+- Task history available for executor and managers (for their team)
+- Airport weather (METAR) lookup via external API with stored lookup history
+
+## Technical Specification & Project Plan
+
+### Introduction
 
 The Airport Task Planner is a web-based task management application designed to support the planning, allocation, execution, and monitoring of operational tasks in an airport environment. The application follows a Single Page Application (SPA) architecture and enables structured collaboration between administrators, managers, and operational staff. Its design is inspired by professional task management platforms such as JIRA and Asana, adapted for airport operational workflows.
 
-2. Objectives
-The main objectives of the Airport Task Planner are:
+### Objectives
 
-To provide a centralized platform for managing operational airport tasks
-To support role-based access and responsibility separation
-To enforce a controlled task lifecycle
-To enable monitoring and historical tracking of completed work
-To ensure scalability and usability across desktop and mobile devices
+- Provide a centralized platform for managing operational airport tasks
+- Support role-based access and responsibility separation
+- Enforce a controlled task lifecycle
+- Enable monitoring and historical tracking of completed work
+- Ensure scalability and usability across desktop and mobile devices
 
-4. User Roles
-3.1 Administrator
+### User Roles
 
-The Administrator is responsible for user management:
+**Administrator**
+- Creates and manages user accounts
+- Assigns roles (Manager or Executor)
+- Assigns a manager to each executor
 
-Creates and manages user accounts
-Assigns roles (Manager or Executor)
-Assigns a manager to each executor
+**Manager**
+- Creates tasks with detailed descriptions
+- Assigns tasks to executors
+- Monitors task progress and status
+- Closes completed tasks
+- Views task history for executors under their supervision
 
-3.2 Manager
+**Executor**
+- Views tasks assigned to them
+- Marks tasks as completed
+- Views their personal task history
 
-Managers coordinate operational activities:
-Create tasks with detailed descriptions
-Assign tasks to executors
-Monitor task progress and status
-Close completed tasks
-View task history for executors under their supervision
-
-3.3 Executor
-
-Executors are responsible for performing operational tasks:
-
-View tasks assigned to them
-Mark tasks as completed
-View their personal task history
-
-4. Task Lifecycle
+### Task Lifecycle
 
 Each task in the system follows a predefined lifecycle:
 
-OPEN – Task created by a manager
-
-PENDING – Task assigned to an executor
-
-COMPLETED – Task marked as finished by the executor
-
-CLOSED – Task reviewed and closed by the manager
+- **OPEN** – Task created by a manager
+- **PENDING** – Task assigned to an executor
+- **COMPLETED** – Task marked as finished by the executor
+- **CLOSED** – Task reviewed and closed by the manager
 
 Only authorized roles can perform specific state transitions.
 
-5. Functional Requirements
+### Functional Requirements
 
-The system supports multiple users with role-based permissions
+- The system supports multiple users with role-based permissions
+- Each executor is assigned to exactly one manager
+- Managers can create operational tasks
+- Tasks can only be assigned by managers
+- Executors can only complete tasks assigned to them
+- Managers can monitor task statuses in real time
+- Task history is available for both executors and managers
+- Administrators have full control over user management
 
-Each executor is assigned to exactly one manager
+### Non-Functional Requirements
 
-Managers can create operational tasks
+- Responsive UI (desktop, tablet, mobile)
+- Secure authentication and authorization
+- High availability and reliability
+- Auditability of task state changes
+- Scalable architecture
 
-Tasks can only be assigned by managers
-
-Executors can only complete tasks assigned to them
-
-Managers can monitor task statuses in real time
-
-Task history is available for both executors and managers
-
-Administrators have full control over user management
-
-6. Non-Functional Requirements
-
-Responsive UI (desktop, tablet, mobile)
-
-Secure authentication and authorization
-
-High availability and reliability
-
-Auditability of task state changes
-
-Scalable architecture
-
-7. System Architecture
+### System Architecture
 
 The Airport Task Planner uses a layered architecture:
 
-Frontend: Single Page Application (SPA)
+- **Frontend**: Single Page Application (SPA)
+- **Backend**: RESTful API
+- **Authentication**: JWT-based authentication
+- **Database**: Relational database system
+
+### Data Model
+
+**User Entity**
+- `id`
+- `name`
+- `email`
+- `password`
+- `role` (ADMIN | MANAGER | EXECUTOR)
+- `managerId` (mandatory for EXECUTOR)
+
+**Task Entity**
+- `id`
+- `title`
+- `description`
+- `status` (OPEN | PENDING | COMPLETED | CLOSED)
+- `createdByManagerId`
+- `assignedToUserId`
+- `createdAt`
+- `updatedAt`
+
+**Task History Entity**
+- `id`
+- `taskId`
+- `previousStatus`
+- `newStatus`
+- `actorUserId`
+- `timestamp`
+
+### API Overview
+
+**Authentication**
+- `POST /auth/login`
+- `GET /auth/me`
+
+**User Management (Administrator)**
+- `POST /users`
+- `GET /users`
+- `PATCH /users/{id}`
 
-Backend: RESTful API
+**Task Management**
+- `POST /tasks` (Manager)
+- `GET /tasks`
+- `POST /tasks/{id}/assign` (Manager)
+- `POST /tasks/{id}/complete` (Executor)
+- `POST /tasks/{id}/close` (Manager)
 
-Authentication: JWT-based authentication
+### Access Control Rules
 
-Database: Relational database system
+- Executors can only view and update their own tasks
+- Managers can manage only tasks they created
+- Managers can view history only for executors they supervise
+- Administrators have unrestricted access
 
-8. Technology Stack
-Frontend
+### Future Enhancements
 
-React
+- Task prioritization and deadlines
+- Comments and attachments
+- Notifications and reminders
+- Reporting and analytics dashboards
+- Integration with airport operational systems
+
+### Project Status
+
+This project is currently implemented as an MVP and can be run locally or deployed following the instructions below.
+
+## Tech Stack
+
+### Backend
+- Node.js (18+)
+- Express.js
+- PostgreSQL
+- Knex.js ORM
+- JWT Authentication
 
-TypeScript
+### Frontend
+- React 19
+- Material-UI
+- React Router
+- React Toastify
 
-Vite
+## Getting Started
 
-Tailwind CSS / Material UI
+### Prerequisites
 
-Backend
+- Node.js 18+ (required for built-in `fetch` used to call the external METAR API)
+- PostgreSQL database
 
-Node.js
+## Install & Run (Tutorial)
 
-NestJS
+This tutorial walks you through a clean setup from scratch.
 
-REST API
+### 0) Clone the repository
+
+```bash
+git clone <YOUR_REPO_URL>
+cd <YOUR_REPO_FOLDER>
+```
 
-JWT Authentication
+### 1) Configure the backend
 
-Database
+```bash
+cd backend
+cp .env.example .env
+```
 
-PostgreSQL
+Edit `.env` and set your PostgreSQL credentials:
 
-Prisma ORM
+```
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_NAME=airport_tasks
+JWT_SECRET=your-secret-key
+PORT=4000
+```
 
-9. Data Model
-User Entity
+### 2) Install and start the backend
 
-id
+```bash
+npm install
+npm run migrate
+npm run seed
+npm run dev
+```
 
-name
+The API will be available at `http://localhost:4000`.
 
-email
+### 3) Configure the frontend
 
-password
+Open a new terminal, then:
 
-role (ADMIN | MANAGER | EXECUTOR)
+```bash
+cd frontend
+```
 
-managerId (mandatory for EXECUTOR)
+Create a `.env` file (or copy from a template if you have one) with:
 
-Task Entity
+```
+REACT_APP_API_URL=http://localhost:4000
+```
 
-id
+### 4) Install and start the frontend
 
-title
+```bash
+npm install
+npm run start
+```
 
-description
+The SPA will be available at `http://localhost:3000`.
 
-status (OPEN | PENDING | COMPLETED | CLOSED)
+### Environment Variables
 
-createdByManagerId
+**Backend (.env)**:
+```
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_NAME=airport_tasks
+JWT_SECRET=your-secret-key
+PORT=4000
+```
 
-assignedToUserId
+**Frontend (.env)**:
+```
+REACT_APP_API_URL=http://localhost:4000
+```
 
-createdAt
+---
 
-updatedAt
+## Deployment (Overview)
 
-Task History Entity
+You can deploy the backend and frontend separately. Any provider is fine (Render, Fly.io, Railway, Azure, AWS, etc.).
 
-id
+### Backend
 
-taskId
+1. Provision a PostgreSQL database.
+2. Set environment variables on the host:
+   - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET`, `PORT`
+3. Run migrations and seeds:
+   - `npm run migrate`
+   - `npm run seed`
+4. Start the API:
+   - `npm run start`
 
-previousStatus
+### Frontend
 
-newStatus
+1. Set `REACT_APP_API_URL` to your deployed API URL.
+2. Build the app:
+   - `npm run build`
+3. Deploy the `build/` folder on a static host (Netlify, Vercel, Azure Static Web Apps, S3, etc.).
 
-actorUserId
+---
 
-timestamp
+## Default Seeded Accounts
 
-10. API Overview
-Authentication
+| Role     | Email                   | Password     |
+|----------|-------------------------|--------------|
+| Admin    | admin@airport.local     | Admin123!    |
+| Manager  | manager@airport.local   | Manager123!  |
+| Executor | exec@airport.local      | Exec123!     |
 
-POST /auth/login
+---
 
-GET /auth/me
+## Task Lifecycle
 
-User Management (Administrator)
+```
+OPEN → PENDING → COMPLETED → CLOSED
+```
 
-POST /users
+- **OPEN**: Task created by a manager
+- **PENDING**: Task assigned to an executor
+- **COMPLETED**: Task marked as finished by the executor
+- **CLOSED**: Task reviewed and closed by the manager
 
-GET /users
+---
 
-PATCH /users/{id}
+## API Endpoints
 
-Task Management
+### Authentication
+- `POST /auth/login` - User login
+- `GET /auth/me` - Get current user info
 
-POST /tasks (Manager)
+### User Management (Admin only)
+- `POST /users` - Create new user
+- `GET /users` - List all users
+- `PATCH /users/:id` - Update user
+- `GET /users/managers` - List managers (for assigning to executors)
 
-GET /tasks
+### Task Management
+- `POST /tasks` - Create task (Manager)
+- `GET /tasks` - Get tasks (role-based)
+- `POST /tasks/:id/assign` - Assign task to executor (Manager)
+- `POST /tasks/:id/complete` - Complete task (Executor)
+- `POST /tasks/:id/close` - Close task (Manager)
 
-POST /tasks/{id}/assign (Manager)
+### History
+- `GET /my/history` - Get own task history (Executor)
+- `GET /executors/:id/history` - Get executor's history (Manager)
 
-POST /tasks/{id}/complete (Executor)
+### Team
+- `GET /team` - Get manager's team members (Manager)
 
-POST /tasks/{id}/close (Manager)
+### Airport Weather
+- `GET /airports/metar?icao=LROP` - Get METAR data for airport (Authenticated)
+- `GET /airports/lookups` - Get user's METAR lookup history (Authenticated)
 
-11. Access Control Rules
+---
 
-Executors can only view and update their own tasks
+## Access Control Rules
 
-Managers can manage only tasks they created
+| Role     | Permissions |
+|----------|-------------|
+| Admin    | Full access to user management |
+| Manager  | Create tasks, assign to team, close completed tasks, view team history |
+| Executor | View assigned tasks, complete tasks, view own history |
 
-Managers can view history only for executors they supervise
+- Executors can only view and update their own tasks
+- Managers can manage only tasks they created
+- Managers can view history only for executors they supervise
+- Administrators have unrestricted access
 
-Administrators have unrestricted access
+---
 
-12. Future Enhancements
+## External Data
 
-Task prioritization and deadlines
+The app integrates with the public **aviationweather.gov** METAR endpoint to retrieve real-time airport weather. Each lookup is stored in the database and can be viewed from the **Airport Weather** page in the SPA.
 
-Comments and attachments
+Example METAR lookup:
+```
+GET /airports/metar?icao=LROP
+```
 
-Notifications and reminders
+---
 
-Reporting and analytics dashboards
+## Project Structure
 
-Integration with airport operational systems
+```
+├── backend/
+│   ├── migrations/          # Database migrations
+│   ├── seeds/               # Seed data
+│   ├── src/
+│   │   ├── endpoints/       # API route handlers
+│   │   ├── routes/          # Route definitions
+│   │   └── utils/           # Utilities and middleware
+│   ├── index.mjs            # Express app
+│   ├── server.mjs           # Server entry point
+│   └── knexfile.cjs         # Database configuration
+│
+├── frontend/
+│   ├── public/              # Static assets
+│   └── src/
+│       ├── api/             # API service functions
+│       ├── components/      # React components
+│       ├── layouts/         # Page layouts
+│       ├── utils/           # Utilities
+│       └── views/           # Page views
+│
+└── README.md
+```
 
-13. Project Status
+---
 
-This project is currently in the design and planning phase.
-Implementation will follow based on the specifications described above.
+## Notes
 
-14. License
+This is an MVP intended for educational use. It prioritizes clarity and minimal scope.
+
+---
+
+## License
 
 This project is developed for educational purposes.

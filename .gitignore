@@ -1,0 +1,40 @@
+## Node / JS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+## Environment files
+.env
+.env.*
+
+## Build output
+dist/
+build/
+coverage/
+
+## Logs
+logs/
+*.log
+
+## Database dumps / local data
+*.sql
+*.dump
+*.bak
+*.sqlite
+*.sqlite3
+/data/
+/uploads/
+
+## Editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+## Cache
+.cache/
+.parcel-cache/
+
