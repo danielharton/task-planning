@@ -177,18 +177,17 @@ This tutorial walks you through a clean setup from scratch.
 ### 0) Clone the repository
 
 ```bash
-git clone <YOUR_REPO_URL>
-cd <YOUR_REPO_FOLDER>
+git clone https://github.com/danielharton/task-planning.git
+cd ./task-planning
 ```
 
 ### 1) Configure the backend
 
 ```bash
 cd backend
-cp .env.example .env
 ```
 
-Edit `.env` and set your PostgreSQL credentials:
+Add an `.env` file and set your PostgreSQL credentials:
 
 ```
 DB_HOST=localhost
@@ -396,3 +395,4 @@ This is an MVP intended for educational use. It prioritizes clarity and minimal 
 ## License
 
 This project is developed for educational purposes.
+
